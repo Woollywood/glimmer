@@ -4,4 +4,6 @@ export const env = {
 
 	AUTH_ERROR_URL: process.env.AUTH_ERROR_URL!,
 	AUTH_DEFAULT_URL: process.env.AUTH_DEFAULT_URL!,
+
+	RESEND_API_KEY: process.env.RESEND_API_KEY!,
 };

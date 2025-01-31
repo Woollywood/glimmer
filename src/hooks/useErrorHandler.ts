@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const useErrorHandler = () => {
 	const [error, setError] = useState<Error>();
 
-	const handleError = (error: unknown) => {
+	const handleError = useCallback((error: unknown) => {
 		if (error instanceof Error) {
 			if (error.message === 'NEXT_REDIRECT') {
 				return;
@@ -13,7 +13,7 @@ export const useErrorHandler = () => {
 		} else {
 			setError(new Error('unknown error'));
 		}
-	};
+	}, []);
 
 	return { handleError, error };
 };
