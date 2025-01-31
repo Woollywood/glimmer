@@ -59,10 +59,16 @@
 }
 
 @layer base {
+	:root,
+	html,
+	body {
+		@apply h-full;
+	}
+
 	* {
 		@apply border-border;
 	}
 	body {
-		@apply font-primary bg-background text-foreground;
+		@apply bg-background font-primary text-foreground;
 	}
 }
