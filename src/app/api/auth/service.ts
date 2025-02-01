@@ -8,6 +8,12 @@ import { SignInDto } from './sign-in/dto';
 import { SignUpDto } from './sign-up/dto';
 import bcrypt from 'bcrypt';
 import { getUserByEmail } from '../user/service';
+import {
+	generateTwoFactorToken,
+	getTwoFactorConfirmationByUserId,
+	getTwoFactorTokenByToken,
+	sendTwoFactorTokenEmail,
+} from './twoFactor/actions';
 
 export const signUp = async ({ name, email, password }: SignUpDto) => {
 	const existingUser = await getUserByEmail(email);
@@ -24,6 +30,8 @@ export const signUp = async ({ name, email, password }: SignUpDto) => {
 		},
 	});
 
+	await twoFactorToken(email);
+
 	return NextResponse.json(null, { status: 201 });
 };
 
@@ -38,6 +46,25 @@ export const signIn = async ({ email, password }: SignInDto) => {
 		if (!isPasswwwordCorrect) {
 			throw new RequestError('Invalid password', 400);
 		}
+	}
+
+	const existingTwoFactorConfirmation = await getTwoFactorConfirmationByUserId(user.id);
+	if (!existingTwoFactorConfirmation) {
+		await twoFactorToken(email);
+	}
+
+	return NextResponse.json(null, { status: 200 });
+};
+
+const twoFactorToken = async (email: string) => {
+	const { token } = await generateTwoFactorToken(email);
+	await sendTwoFactorTokenEmail(email, token);
+};
+
+export const twoFactorCheckCode = async (token: string) => {
+	const prismaToken = await getTwoFactorTokenByToken(token);
+	if (!prismaToken) {
+		throw new RequestError('Invalid token', 500);
 	}
 
 	return NextResponse.json(null, { status: 200 });

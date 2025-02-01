@@ -10,7 +10,6 @@ import { signIn } from '../service';
 export const signInWithCredentials = async (dto: SignInDto) => {
 	try {
 		await signIn(dto);
-		await _signIn('credentials', dto);
 	} catch (error) {
 		throw error;
 	}

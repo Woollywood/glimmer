@@ -7,6 +7,7 @@ import { User as PrismaUser } from '@prisma/client';
 import { signInDto } from '@/app/api/auth/sign-in/dto';
 import { getUserByEmail, getUserById } from '@/app/api/user/service';
 import Credentials from 'next-auth/providers/credentials';
+import { getTwoFactorConfirmationByUserId } from './app/api/auth/twoFactor/actions';
 
 declare module 'next-auth' {
 	interface Session extends DefaultSession {
@@ -36,6 +37,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		}),
 	],
 	callbacks: {
+		async signIn({ account, user }) {
+			if (account?.provider !== 'credentials') {
+				return true;
+			}
+
+			const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(user.id!);
+			return !!twoFactorConfirmation;
+		},
 		async jwt({ token }) {
 			if (token.sub) {
 				const user = await getUserById(token.sub!);
@@ -53,7 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		async linkAccount({ user }) {
 			await prisma.user.update({
 				where: { id: user.id },
-				data: { emailVerified: new Date() },
+				data: { isTwoFactorEnabled: false },
 			});
 		},
 	},

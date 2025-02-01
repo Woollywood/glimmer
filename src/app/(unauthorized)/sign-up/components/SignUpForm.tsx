@@ -1,46 +1,32 @@
 'use client';
 
-import React, { useTransition } from 'react';
+import React from 'react';
 import { providerMap } from '@/auth.config';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useSignUpForm } from '@/hooks/useSignUpForm';
-import { SignUpDto } from '@/app/api/auth/sign-up/dto';
-import { signUpWithCredentials } from '@/app/api/auth/sign-up/actions';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
+import { SignForm } from '../../components/SignForm';
+import { SignUpDto } from '@/app/api/auth/sign-up/dto';
+import { signUp } from './actions';
 
 interface Props {
 	callbackUrl?: string;
 }
 export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 	const hasOtherProviders = Object.keys(providerMap).length > 0;
-
 	const form = useSignUpForm();
-	const { handleError, error } = useErrorHandler();
-
-	const [isPending, startTransition] = useTransition();
-	const onSubmit = async (values: SignUpDto) => {
-		startTransition(async () => {
-			try {
-				await signUpWithCredentials(values);
-			} catch (error) {
-				handleError(error);
-			}
-		});
-	};
+	const submitHandler = async (values: SignUpDto) => await signUp(values);
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle className='text-center'>Sign in</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className='min-w-[22.5rem] space-y-4'>
+		<SignForm
+			title='Sign up'
+			type='signup'
+			credentials={{
+				fields: () => (
+					<>
 						<FormField
 							control={form.control}
 							name='name'
@@ -93,35 +79,34 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 								</FormItem>
 							)}
 						/>
-						{form.formState.errors.root?.message && <p>{form.formState.errors.root.message}</p>}
-						{!!error && <p>{error?.message}</p>}
-						<div className='flex items-center justify-center'>
-							<Button disabled={isPending}>Create an account</Button>
-						</div>
-					</form>
-				</Form>
-			</CardContent>
-			<CardFooter className='flex-col gap-4'>
-				{hasOtherProviders && (
+					</>
+				),
+				form,
+				onSubmit: submitHandler,
+			}}
+			providers={() =>
+				hasOtherProviders ? (
 					<div>
 						{Object.values(providerMap).map((provider) => (
 							<form
 								key={provider.id}
 								className='flex w-full items-center gap-x-4'
 								action={() => signInWithOAuth(provider, callbackUrl)}>
-								<Button className='w-full' disabled={isPending}>
+								<Button className='w-full'>
 									<span>Sign up with {provider.name}</span>
 								</Button>
 							</form>
 						))}
 					</div>
-				)}
+				) : undefined
+			}
+			footer={() => (
 				<div className='flex items-center justify-center'>
 					<Button variant='link' asChild>
 						<Link href='/sign-in'>Already have an account?</Link>
 					</Button>
 				</div>
-			</CardFooter>
-		</Card>
+			)}
+		/>
 	);
 };
