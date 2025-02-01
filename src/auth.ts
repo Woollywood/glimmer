@@ -36,13 +36,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account }) {
-			if (account?.provider !== 'credentials') {
-				return true;
-			}
-
-			return !!(user as PrismaUser).emailVerified;
-		},
 		async jwt({ token }) {
 			if (token.sub) {
 				const user = await getUserById(token.sub!);
