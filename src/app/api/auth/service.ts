@@ -14,6 +14,11 @@ import {
 	getTwoFactorTokenByToken,
 	sendTwoFactorTokenEmail,
 } from './twoFactor/actions';
+import {
+	generatePasswordResetToken,
+	getPasswordResetTokenByToken,
+	sendPasswordResetTokenEmail,
+} from './forgot-password/actions';
 
 export const signUp = async ({ name, email, password }: SignUpDto) => {
 	const existingUser = await getUserByEmail(email);
@@ -62,10 +67,54 @@ const twoFactorToken = async (email: string) => {
 };
 
 export const twoFactorCheckCode = async (token: string) => {
-	const prismaToken = await getTwoFactorTokenByToken(token);
-	if (!prismaToken) {
+	const existingToken = await getTwoFactorTokenByToken(token);
+	if (!existingToken) {
 		throw new RequestError('Invalid token', 500);
 	}
 
+	if (existingToken.expires < new Date()) {
+		throw new RequestError('Token has expired', 500);
+	}
+
+	return NextResponse.json(null, { status: 200 });
+};
+
+export const forgotPassword = async (email: string) => {
+	const user = await getUserByEmail(email);
+	if (!user) {
+		throw new RequestError('User not exists', 500);
+	}
+
+	const token = await generatePasswordResetToken(email);
+	await sendPasswordResetTokenEmail(token.email, token.token);
+
+	return NextResponse.json(null, { status: 200 });
+};
+
+export const resetPassword = async (password: string, token?: string) => {
+	if (!token) {
+		throw new RequestError('Missing token', 500);
+	}
+
+	const existingToken = await getPasswordResetTokenByToken(token);
+	if (!existingToken) {
+		throw new RequestError('Invalid token', 500);
+	}
+
+	if (existingToken.expires < new Date()) {
+		throw new RequestError('Token has expired', 500);
+	}
+
+	const existingUser = await getUserByEmail(existingToken.email);
+	if (!existingUser) {
+		throw new RequestError('Email does not exists!', 500);
+	}
+
+	const hashedPassword = await getHashedPassword(password);
+	await prisma.user.update({
+		where: { id: existingUser.id },
+		data: { password: hashedPassword },
+	});
+	await prisma.passwordResetToken.delete({ where: { id: existingToken.id } });
 	return NextResponse.json(null, { status: 200 });
 };

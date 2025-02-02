@@ -7,13 +7,17 @@ import { Button } from '@/components/ui/button';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { Input } from '@/components/ui/input';
-import { TwoFactorCodeDto } from '@/app/api/auth/twoFactor/dto';
+import { twoFactorCodeDto, TwoFactorCodeDto } from '@/app/api/auth/twoFactor/dto';
 import { twoFactorSignIn } from '@/app/api/auth/twoFactor/actions';
 import { SignInDto } from '@/app/api/auth/sign-in/dto';
+import { forgotPasswordDto, ForgotPasswordDto } from '@/app/api/auth/forgot-password/dto';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { forgotPassword } from '@/app/api/auth/forgot-password/actions';
 
-enum TwoFactorStage {
-	FIRST = 1,
-	SECOND = 2,
+enum Stage {
+	_2FA1 = 1,
+	_2FA2 = 2,
+	FORGOT_PASS = 3,
 }
 
 interface Props<TFieldValues extends SignInDto> {
@@ -35,30 +39,37 @@ export const SignForm = <TFieldValues extends SignInDto>({
 	title,
 	type = 'signin',
 }: Props<TFieldValues>) => {
-	const [stage, setStage] = useState<TwoFactorStage>(TwoFactorStage.FIRST);
+	const [stage, setStage] = useState<Stage>(Stage._2FA1);
+	const { handleError } = useErrorHandler();
 
-	const form = useForm<TwoFactorCodeDto>({ defaultValues: { token: '' } });
-	const twoFactor = async (token?: string) => {
-		if (!credentials?.form.getValues()) {
-			throw new Error('Invalid credentials');
-		}
-		await twoFactorSignIn(credentials?.form.getValues(), token);
-	};
+	const twoFactorForm = useForm<TwoFactorCodeDto>({
+		defaultValues: { token: '' },
+		resolver: zodResolver(twoFactorCodeDto),
+	});
 
 	const hasCredentials = !!credentials;
 	const hasProviders = !!providers;
 	const hasFooter = hasProviders && !!footer;
+	const secondStageHandler = async (token?: string) => {
+		try {
+			if (!credentials?.form.getValues()) {
+				throw new Error('Invalid credentials');
+			}
+			await twoFactorSignIn(credentials?.form.getValues(), token);
+		} catch (error) {
+			handleError(error);
+		}
+	};
 
-	const { handleError, error } = useErrorHandler();
 	const [isPending, startTransition] = useTransition();
 	const submitHandler = async (values: TFieldValues) => {
 		startTransition(async () => {
 			try {
 				const response = await credentials?.onSubmit(values);
 				if (response) {
-					setStage(TwoFactorStage.SECOND);
+					setStage(Stage._2FA2);
 				} else {
-					twoFactor();
+					await secondStageHandler();
 				}
 			} catch (error) {
 				handleError(error);
@@ -66,10 +77,20 @@ export const SignForm = <TFieldValues extends SignInDto>({
 		});
 	};
 
-	const secondStage = async ({ token }: TwoFactorCodeDto) => {
+	const secondStageSubmit = async ({ token }: TwoFactorCodeDto) => {
+		startTransition(async () => {
+			await secondStageHandler(token);
+		});
+	};
+
+	const forgotPasswordForm = useForm<ForgotPasswordDto>({
+		defaultValues: { email: '' },
+		resolver: zodResolver(forgotPasswordDto),
+	});
+	const handleForgotPassword = async ({ email }: ForgotPasswordDto) => {
 		startTransition(async () => {
 			try {
-				twoFactor(token);
+				await forgotPassword(email);
 			} catch (error) {
 				handleError(error);
 			}
@@ -82,15 +103,22 @@ export const SignForm = <TFieldValues extends SignInDto>({
 				<CardTitle className='text-center'>{title}</CardTitle>
 			</CardHeader>
 			<CardContent>
-				{hasCredentials ? (
+				{hasCredentials && (
 					<>
-						{stage === TwoFactorStage.FIRST && (
+						{stage === Stage._2FA1 && (
 							<Form {...credentials.form}>
 								<form
 									onSubmit={credentials.form.handleSubmit(submitHandler)}
 									className='min-w-[22.5rem] space-y-4'>
 									{credentials.fields()}
-									{!!error && <p>{error?.message}</p>}
+									{type === 'signin' && (
+										<Button
+											type='button'
+											variant='link'
+											onClick={() => setStage(Stage.FORGOT_PASS)}>
+											Forgot password?
+										</Button>
+									)}
 									<div className='flex items-center justify-center'>
 										<Button disabled={isPending}>
 											{type === 'signin' ? 'Sign in' : 'Sign up'}
@@ -99,37 +127,54 @@ export const SignForm = <TFieldValues extends SignInDto>({
 								</form>
 							</Form>
 						)}
-						{stage === TwoFactorStage.SECOND && (
-							<div>
-								<Form {...form}>
-									<form onSubmit={form.handleSubmit(secondStage)}>
-										<FormField
-											control={form.control}
-											name='token'
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Code</FormLabel>
-													<FormControl>
-														<Input placeholder='code' {...field} />
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<div className='flex items-center justify-center'>
-											<Button disabled={isPending}>Confirm</Button>
-										</div>
-									</form>
-								</Form>
-								{!!error && <p>{error?.message}</p>}
-							</div>
+						{stage === Stage._2FA2 && (
+							<Form {...twoFactorForm}>
+								<form onSubmit={twoFactorForm.handleSubmit(secondStageSubmit)}>
+									<FormField
+										control={twoFactorForm.control}
+										name='token'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Code</FormLabel>
+												<FormControl>
+													<Input placeholder='code' {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<div className='flex items-center justify-center'>
+										<Button disabled={isPending}>Confirm</Button>
+									</div>
+								</form>
+							</Form>
+						)}
+						{stage === Stage.FORGOT_PASS && (
+							<Form {...forgotPasswordForm}>
+								<form onSubmit={forgotPasswordForm.handleSubmit(handleForgotPassword)}>
+									<FormField
+										control={forgotPasswordForm.control}
+										name='email'
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Email</FormLabel>
+												<FormControl>
+													<Input autoComplete='email' placeholder='john@mail.ru' {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<div className='flex items-center justify-center'>
+										<Button disabled={isPending}>Send reset link</Button>
+									</div>
+								</form>
+							</Form>
 						)}
 					</>
-				) : (
-					!!error && <p>{error?.message}</p>
 				)}
 			</CardContent>
-			{hasFooter && stage === TwoFactorStage.FIRST && (
+			{hasFooter && stage === Stage._2FA1 && (
 				<CardFooter className='flex-col gap-4'>
 					{providers?.()}
 					{footer?.()}
