@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useToast } from './use-toast';
+import { useToast } from './useToast';
 
 export const useErrorHandler = () => {
 	const { toast } = useToast();

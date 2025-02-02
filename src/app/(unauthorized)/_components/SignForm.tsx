@@ -30,6 +30,7 @@ interface Props<TFieldValues extends SignInDto> {
 	footer?: () => React.ReactNode;
 	title: string;
 	type?: 'signin' | 'signup';
+	callbackUrl?: string;
 }
 
 export const SignForm = <TFieldValues extends SignInDto>({
@@ -38,6 +39,7 @@ export const SignForm = <TFieldValues extends SignInDto>({
 	footer,
 	title,
 	type = 'signin',
+	callbackUrl,
 }: Props<TFieldValues>) => {
 	const [stage, setStage] = useState<Stage>(Stage._2FA1);
 	const { handleError } = useErrorHandler();
@@ -50,16 +52,6 @@ export const SignForm = <TFieldValues extends SignInDto>({
 	const hasCredentials = !!credentials;
 	const hasProviders = !!providers;
 	const hasFooter = hasProviders && !!footer;
-	const secondStageHandler = async (token?: string) => {
-		try {
-			if (!credentials?.form.getValues()) {
-				throw new Error('Invalid credentials');
-			}
-			await twoFactorSignIn(credentials?.form.getValues(), token);
-		} catch (error) {
-			handleError(error);
-		}
-	};
 
 	const [isPending, startTransition] = useTransition();
 	const submitHandler = async (values: TFieldValues) => {
@@ -69,7 +61,10 @@ export const SignForm = <TFieldValues extends SignInDto>({
 				if (response) {
 					setStage(Stage._2FA2);
 				} else {
-					await secondStageHandler();
+					if (!credentials?.form.getValues()) {
+						throw new Error('Invalid credentials');
+					}
+					await twoFactorSignIn({ dto: credentials?.form.getValues(), callbackUrl });
 				}
 			} catch (error) {
 				handleError(error);
@@ -79,7 +74,14 @@ export const SignForm = <TFieldValues extends SignInDto>({
 
 	const secondStageSubmit = async ({ token }: TwoFactorCodeDto) => {
 		startTransition(async () => {
-			await secondStageHandler(token);
+			try {
+				if (!credentials?.form.getValues()) {
+					throw new Error('Invalid credentials');
+				}
+				await twoFactorSignIn({ dto: credentials?.form.getValues(), token, callbackUrl });
+			} catch (error) {
+				handleError(error);
+			}
 		});
 	};
 

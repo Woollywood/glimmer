@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useSignUpForm } from '@/hooks/useSignUpForm';
 import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
-import { SignForm } from '../../components/SignForm';
+import { SignForm } from '../../_components/SignForm';
 import { SignUpDto } from '@/app/api/auth/sign-up/dto';
 import { signUp } from './actions';
 
@@ -24,6 +24,7 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 		<SignForm
 			title='Sign up'
 			type='signup'
+			callbackUrl={callbackUrl}
 			credentials={{
 				fields: () => (
 					<>

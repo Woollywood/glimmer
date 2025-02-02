@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useSignInForm } from '@/hooks/useSignInForm';
 import { SignInDto } from '@/app/api/auth/sign-in/dto';
 import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
-import { SignForm } from '../../components/SignForm';
+import { SignForm } from '../../_components/SignForm';
 import { signIn } from './actions';
 
 interface Props {
@@ -24,6 +24,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 		<>
 			<SignForm
 				title='Sign in'
+				callbackUrl={callbackUrl}
 				credentials={{
 					fields: () => (
 						<>

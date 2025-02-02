@@ -9,6 +9,10 @@ export default {
 	],
 	theme: {
 		extend: {
+			container: {
+				padding: '2rem',
+				center: true,
+			},
 			colors: {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',

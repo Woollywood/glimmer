@@ -54,6 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			return token;
 		},
 		async session({ token, session }) {
+			// @ts-expect-error wrong type
 			session.user = token.user as PrismaUser;
 			return session;
 		},

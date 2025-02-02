@@ -59,12 +59,6 @@
 }
 
 @layer base {
-	:root,
-	html,
-	body {
-		@apply h-full;
-	}
-
 	* {
 		@apply border-border;
 	}

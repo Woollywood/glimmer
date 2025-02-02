@@ -17,12 +17,19 @@ export default auth(async function middleware(req: NextRequest) {
 		return NextResponse.next();
 	}
 	if (isAuthRoute) {
+		if (isLoggedIn) {
+			return Response.redirect(new URL(env.AUTH_DEFAULT_REDIRECT_URL, nextUrl));
+		}
 		return NextResponse.next();
 	}
 
 	if (!isLoggedIn && !isPublicRoute) {
-		const callbackUrl = nextUrl.pathname;
-		return Response.redirect(new URL(`${env.AUTH_DEFAULT_URL}?callbackUrl=${callbackUrl}`, nextUrl));
+		let callbackUrl = nextUrl.pathname;
+		if (nextUrl.search) {
+			callbackUrl += nextUrl.search;
+		}
+		const encodedCallbackUrl = encodeURI(callbackUrl);
+		return Response.redirect(new URL(`${env.AUTH_DEFAULT_URL}?callbackUrl=${encodedCallbackUrl}`, nextUrl));
 	}
 
 	return NextResponse.next();

@@ -1,14 +1,22 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { resend } from '@/lib/resend';
 import crypto from 'crypto';
 import { twoFactorCheckCode } from '../service';
 import { SignInDto } from '../sign-in/dto';
 import { signIn } from '@/auth';
 import { getUserByEmail } from '../../user/service';
+import { env } from '@/configs/env';
 
-export const twoFactorSignIn = async (dto: SignInDto, token?: string) => {
+export const twoFactorSignIn = async ({
+	dto,
+	token,
+	callbackUrl,
+}: {
+	dto: SignInDto;
+	token?: string;
+	callbackUrl?: string;
+}) => {
 	try {
 		if (token) {
 			await twoFactorCheckCode(token);
@@ -16,7 +24,7 @@ export const twoFactorSignIn = async (dto: SignInDto, token?: string) => {
 			await prisma.twoFactorConfirmation.create({ data: { userId: user?.id || '' } });
 			await prisma.twoFactorToken.delete({ where: { token } });
 		}
-		await signIn('credentials', dto);
+		await signIn('credentials', { ...dto, redirectTo: callbackUrl || env.AUTH_DEFAULT_REDIRECT_URL });
 	} catch (error) {
 		throw error;
 	}
@@ -45,13 +53,4 @@ export const generateTwoFactorToken = async (email: string) => {
 	}
 
 	return await prisma.twoFactorToken.create({ data: { email, token, expires } });
-};
-
-export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
-	await resend.emails.send({
-		from: 'onboarding@resend.dev',
-		to: email,
-		subject: '2FA Code',
-		html: `<p>Your 2FA code: ${token}</p>`,
-	});
 };

@@ -12,13 +12,9 @@ import {
 	generateTwoFactorToken,
 	getTwoFactorConfirmationByUserId,
 	getTwoFactorTokenByToken,
-	sendTwoFactorTokenEmail,
 } from './twoFactor/actions';
-import {
-	generatePasswordResetToken,
-	getPasswordResetTokenByToken,
-	sendPasswordResetTokenEmail,
-} from './forgot-password/actions';
+import { generatePasswordResetToken, getPasswordResetTokenByToken } from './forgot-password/actions';
+import { sendPasswordResetTokenEmail, sendTwoFactorTokenEmail } from '../mail/actions';
 
 export const signUp = async ({ name, email, password }: SignUpDto) => {
 	const existingUser = await getUserByEmail(email);
