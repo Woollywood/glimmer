@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { providerMap } from '@/auth.config';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useSignInForm } from '@/hooks/useSignInForm';
@@ -32,7 +32,6 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 								name='email'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Email</FormLabel>
 										<FormControl>
 											<Input autoComplete='email' placeholder='Enter email' {...field} />
 										</FormControl>
@@ -45,7 +44,6 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 								name='password'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Password</FormLabel>
 										<FormControl>
 											<Input
 												autoComplete='current-password'

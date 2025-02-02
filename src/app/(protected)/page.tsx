@@ -1,7 +1,11 @@
 import { NextPage } from 'next';
 
 const Page: NextPage = async () => {
-	return <main className='flex h-full flex-col items-center justify-center'></main>;
+	return (
+		<main>
+			<h1 className='text-center'>Main page</h1>
+		</main>
+	);
 };
 
 export default Page;

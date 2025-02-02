@@ -42,9 +42,13 @@ export const signIn = async ({ email, password }: SignInDto) => {
 		throw new RequestError('User not found', 400);
 	}
 
+	if (user.accounts) {
+		return NextResponse.json(null, { status: 200 });
+	}
+
 	if (user.password) {
-		const isPasswwwordCorrect = await bcrypt.compare(password, user.password);
-		if (!isPasswwwordCorrect) {
+		const isPasswordCorrect = await bcrypt.compare(password, user.password);
+		if (!isPasswordCorrect) {
 			throw new RequestError('Invalid password', 400);
 		}
 	}

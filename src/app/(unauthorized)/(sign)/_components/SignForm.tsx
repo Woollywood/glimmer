@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -222,10 +222,12 @@ export const SignForm = <TFieldValues extends SignInDto>({
 				)}
 			</CardContent>
 			{hasProviders && stage === Stage._2FA1 && (
-				<CardFooter className='flex-col gap-4'>
-					<p>Or continue with</p>
+				<>
+					<div className='py-4'>
+						<p className='text-center text-gray-400'>Or continue with</p>
+					</div>
 					{providers?.()}
-				</CardFooter>
+				</>
 			)}
 		</Card>
 	);

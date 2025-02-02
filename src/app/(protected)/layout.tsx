@@ -1,4 +1,4 @@
-import { ThemeToggler } from '@/components/shared/ThemeToggler';
+import { Header } from '@/components/shared/Header';
 import { NextPage } from 'next';
 
 interface Props {
@@ -7,10 +7,8 @@ interface Props {
 
 const Layout: NextPage<Props> = ({ children }) => {
 	return (
-		<div>
-			<div>
-				<ThemeToggler />
-			</div>
+		<div className='grid grid-rows-[auto_1fr] gap-6'>
+			<Header />
 			{children}
 		</div>
 	);
