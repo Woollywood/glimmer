@@ -14,55 +14,139 @@ export default {
 				center: true,
 			},
 			colors: {
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))',
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))',
+				'body-bg': 'rgb(var(--ui-body-bg))',
+				'body-color': 'rgb(var(--ui-body-color))',
+				'emphasis-color': 'rgb(var(--ui-emphasis-color))',
+				'secondary-color': 'rgb(var(--ui-secondary-color))',
+				'secondary-bg': 'rgb(var(--ui-secondary-bg))',
+				'tertiary-color': 'rgb(var(--ui-tertiary-color))',
+				'tertiary-bg': 'rgb(var(--ui-tertiary-bg))',
+
+				heading: {
+					DEFAULT: 'var(--ui-heading-color)',
 				},
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
+					DEFAULT: 'rgb(var(--ui-primary))',
+					foreground: 'rgb(var(--ui-primary-text-emphasis))',
+					subtle: 'rgb(var(--ui-primary-bg-subtle))',
+					border: 'rgb(var(--ui-primary-border-subtle))',
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))',
+					DEFAULT: 'rgb(var(--ui-secondary))',
+					foreground: 'rgb(var(--ui-secondary-text-emphasis))',
+					subtle: 'rgb(var(--ui-secondary-bg-subtle))',
+					border: 'rgb(var(--ui-secondary-border-subtle))',
 				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))',
+				success: {
+					DEFAULT: 'rgb(var(--ui-success))',
+					foreground: 'rgb(var(--ui-success-text-emphasis))',
+					subtle: 'rgb(var(--ui-success-bg-subtle))',
+					border: 'rgb(var(--ui-success-border-subtle))',
 				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))',
+				info: {
+					DEFAULT: 'rgb(var(--ui-info))',
+					foreground: 'rgb(var(--ui-info-text-emphasis))',
+					subtle: 'rgb(var(--ui-info-bg-subtle))',
+					border: 'rgb(var(--ui-info-border-subtle))',
 				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))',
+				warning: {
+					DEFAULT: 'rgb(var(--ui-warning))',
+					foreground: 'rgb(var(--ui-warning-text-emphasis))',
+					subtle: 'rgb(var(--ui-warning-bg-subtle))',
+					border: 'rgb(var(--ui-warning-border-subtle))',
 				},
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				chart: {
-					'1': 'hsl(var(--chart-1))',
-					'2': 'hsl(var(--chart-2))',
-					'3': 'hsl(var(--chart-3))',
-					'4': 'hsl(var(--chart-4))',
-					'5': 'hsl(var(--chart-5))',
+				danger: {
+					DEFAULT: 'rgb(var(--ui-danger))',
+					foreground: 'rgb(var(--ui-danger-text-emphasis))',
+					subtle: 'rgb(var(--ui-danger-bg-subtle))',
+					border: 'rgb(var(--ui-danger-border-subtle))',
+				},
+				light: {
+					DEFAULT: 'rgb(var(--ui-light))',
+					foreground: 'rgb(var(--ui-light-text-emphasis))',
+					subtle: 'rgb(var(--ui-light-bg-subtle))',
+					border: 'rgb(var(--ui-light-border-subtle))',
+				},
+				dark: {
+					DEFAULT: 'rgb(var(--ui-dark))',
+					foreground: 'rgb(var(--ui-dark-text-emphasis))',
+					subtle: 'rgb(var(--ui-dark-bg-subtle))',
+					border: 'rgb(var(--ui-dark-border-subtle))',
+				},
+
+				link: {
+					DEFAULT: 'rgb(var(--ui-link-color))',
+					hover: 'rgb(var(--ui-link-hover-color))',
+				},
+				highlight: {
+					DEFAULT: 'rgb(var(--ui-highlight-color))',
+					bg: 'rgb(var(--ui-highlight-bg))',
+				},
+				code: 'rgb(var(--ui-code-color))',
+
+				gray: {
+					100: 'rgb(var(--ui-gray-100))',
+					200: 'rgb(var(--ui-gray-200))',
+					300: 'rgb(var(--ui-gray-300))',
+					400: 'rgb(var(--ui-gray-400))',
+					500: 'rgb(var(--ui-gray-500))',
+					600: 'rgb(var(--ui-gray-600))',
+					700: 'var(--ui-gray-700)',
+					800: 'var(--ui-gray-800)',
+					900: 'rgb(var(--ui-gray-900))',
+				},
+
+				border: {
+					DEFAULT: 'var(--ui-border-color)',
+					translucent: 'var(--ui-border-color-translucent)',
+					style: 'var(--ui-border-style)',
+				},
+
+				focusRing: 'var(--ui-focus-ring-color)',
+
+				form: {
+					valid: {
+						color: 'rgb(var(--ui-form-valid-color))',
+						border: 'rgb(var(--ui-form-valid-border-color))',
+					},
+					invalid: {
+						color: 'rgb(var(--ui-form-invalid-color))',
+						border: 'rgb(var(--ui-form-invalid-border-color))',
+					},
 				},
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)',
+				DEFAULT: 'var(--ui-border-radius)',
+				sm: 'var(--ui-border-radius-sm)',
+				lg: 'var(--ui-border-radius-lg)',
+				xl: 'var(--ui-border-radius-xl)',
+				'2xl': 'var(--ui-border-radius-2xl)',
+				pill: 'var(--ui-border-radius-pill)',
+			},
+			boxShadow: {
+				DEFAULT: 'var(--ui-box-shadow)',
+				sm: 'var(--ui-box-shadow-sm)',
+				lg: 'var(--ui-box-shadow-lg)',
+				inset: 'var(--ui-box-shadow-inset)',
+			},
+			width: {
+				border: 'var(--ui-border-width)',
+				'focus-ring': 'var(--ui-focus-ring-width)',
+			},
+			opacity: {
+				'focus-ring': 'var(--ui-focus-ring-opacity)',
 			},
 			fontFamily: {
 				primary: ['var(--font-primary)', 'sans-serif'],
-				secondary: ['var(--font-secondary)', 'sans-serif'],
+			},
+			keyframes: {
+				'caret-blink': {
+					'0%,70%,100%': { opacity: '1' },
+					'20%,50%': { opacity: '0' },
+				},
+			},
+			animation: {
+				'caret-blink': 'caret-blink 1.25s ease-out infinite',
 			},
 		},
 	},
