@@ -2,10 +2,9 @@
 
 import React from 'react';
 import { providerMap } from '@/auth.config';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { useSignUpForm } from '@/hooks/useSignUpForm';
 import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
 import { SignForm } from '../../_components/SignForm';
@@ -27,15 +26,14 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 			callbackUrl={callbackUrl}
 			credentials={{
 				fields: () => (
-					<>
+					<div className='space-y-4'>
 						<FormField
 							control={form.control}
 							name='name'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Name</FormLabel>
 									<FormControl>
-										<Input autoComplete='username' placeholder='woollywood' {...field} />
+										<Input autoComplete='username' placeholder='Enter your username' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -46,9 +44,8 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 							name='email'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
 									<FormControl>
-										<Input autoComplete='email' placeholder='john@mail.ru' {...field} />
+										<Input autoComplete='email' placeholder='Enter your email' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -59,9 +56,13 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 							name='password'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input autoComplete='current-password' type='password' {...field} />
+										<Input
+											autoComplete='current-password'
+											type='password'
+											placeholder='Enter your password'
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -72,22 +73,21 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 							name='confirmPassword'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Confirm password</FormLabel>
 									<FormControl>
-										<Input type='password' {...field} />
+										<Input type='password' {...field} placeholder='Confirm password' />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-					</>
+					</div>
 				),
 				form,
 				onSubmit: submitHandler,
 			}}
 			providers={() =>
 				hasOtherProviders ? (
-					<div>
+					<div className='flex items-center gap-4'>
 						{Object.values(providerMap).map((provider) => (
 							<form
 								key={provider.id}
@@ -101,13 +101,6 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 					</div>
 				) : undefined
 			}
-			footer={() => (
-				<div className='flex items-center justify-center'>
-					<Button variant='link' asChild>
-						<Link href='/sign-in'>Already have an account?</Link>
-					</Button>
-				</div>
-			)}
 		/>
 	);
 };

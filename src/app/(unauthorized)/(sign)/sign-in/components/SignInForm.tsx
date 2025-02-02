@@ -5,7 +5,6 @@ import { providerMap } from '@/auth.config';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { useSignInForm } from '@/hooks/useSignInForm';
 import { SignInDto } from '@/app/api/auth/sign-in/dto';
 import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
@@ -35,7 +34,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 									<FormItem>
 										<FormLabel>Email</FormLabel>
 										<FormControl>
-											<Input autoComplete='email' placeholder='john@mail.ru' {...field} />
+											<Input autoComplete='email' placeholder='Enter email' {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -48,7 +47,12 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input autoComplete='current-password' type='password' {...field} />
+											<Input
+												autoComplete='current-password'
+												type='password'
+												placeholder='Enter password'
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -61,7 +65,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 				}}
 				providers={() =>
 					hasOtherProviders ? (
-						<div>
+						<div className='flex items-center gap-4'>
 							{Object.values(providerMap).map((provider) => (
 								<form
 									key={provider.id}
@@ -75,13 +79,6 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 						</div>
 					) : undefined
 				}
-				footer={() => (
-					<div className='flex items-center justify-center'>
-						<Button variant='link' asChild>
-							<Link href='/sign-up'>Don&apos;t have an account?</Link>
-						</Button>
-					</div>
-				)}
 			/>
 		</>
 	);
