@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { forgotPassword as _forgotPassword } from '../service';
 import { v4 as uuid } from 'uuid';
+import { getPasswordResetTokenByEmail } from '@/data/passwordResetToken';
 
 export const forgotPassword = async (email: string) => {
 	try {
@@ -11,12 +12,6 @@ export const forgotPassword = async (email: string) => {
 		throw error;
 	}
 };
-
-export const getPasswordResetTokenByToken = async (token: string) =>
-	await prisma.passwordResetToken.findUnique({ where: { token } });
-
-export const getPasswordResetTokenByEmail = async (email: string) =>
-	await prisma.passwordResetToken.findFirst({ where: { email } });
 
 export const generatePasswordResetToken = async (email: string) => {
 	const token = uuid();

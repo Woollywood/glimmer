@@ -1,7 +1,7 @@
 'use client';
 
-import { resetPassword } from '@/app/api/auth/resetPassword/actions';
-import { ResetPasswordDto } from '@/app/api/auth/resetPassword/dto';
+import { resetPassword } from '@/actions/auth/resetPassword/actions';
+import { ResetPasswordDto } from '@/actions/auth/resetPassword/dto';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -10,12 +10,14 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { useResetPasswordForm } from '@/hooks/useResetPasswordForm';
 import Link from 'next/link';
 import React, { useTransition } from 'react';
+import { useToast } from '@/hooks/useToast';
 
 interface Props {
 	token?: string;
 }
 
 export const ResetForm: React.FC<Props> = ({ token }) => {
+	const { toast } = useToast();
 	const { handleError } = useErrorHandler();
 	const form = useResetPasswordForm();
 	const [isPending, startTransition] = useTransition();
@@ -23,6 +25,7 @@ export const ResetForm: React.FC<Props> = ({ token }) => {
 		startTransition(async () => {
 			try {
 				await resetPassword(password, token);
+				toast({ title: 'Notifications', description: 'Password changed' });
 			} catch (error) {
 				handleError(error);
 			}

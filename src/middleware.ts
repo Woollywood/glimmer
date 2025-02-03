@@ -1,21 +1,21 @@
 import authConfig from '@/auth.config';
 import NextAuth from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { publicRoutes, authRoutes, apiAuthPrefix } from '@/configs/routes';
+import { publicRoutes, authRoutes } from '@/configs/routes';
 import { env } from './configs/env';
 
 const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(req: NextRequest) {
 	const { nextUrl } = req;
 	const isLoggedIn = 'auth' in req && !!req.auth;
-
-	const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-	const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 	const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+	const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+	const isApiRoute = nextUrl.pathname.includes('/api');
 
-	if (isApiAuthRoute) {
+	if (isApiRoute) {
 		return NextResponse.next();
 	}
+
 	if (isAuthRoute) {
 		if (isLoggedIn) {
 			return Response.redirect(new URL(env.AUTH_DEFAULT_REDIRECT_URL, nextUrl));

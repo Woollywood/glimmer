@@ -111,7 +111,7 @@
 		--ui-success-text-emphasis: 117 183 152;
 		--ui-info-text-emphasis: 110 223 246;
 		--ui-warning-text-emphasis: 255 218 106;
-		--ui-danger-text-emphasis: 234 134 143;
+		--ui-danger-text-emphasis: 234 234 243;
 		--ui-light-text-emphasis: 248 249 250;
 		--ui-dark-text-emphasis: 222 226 230;
 		--ui-primary-bg-subtle: 3 22 51;
@@ -168,11 +168,11 @@
 		@apply border-border;
 	}
 	body {
-		@apply bg-body-bg text-body-color font-primary;
+		@apply bg-body-bg font-primary text-body-color;
 	}
 
 	a {
-		@apply hover:text-link-hover transition-colors;
+		@apply transition-colors hover:text-link-hover;
 	}
 
 	h1,
@@ -181,7 +181,7 @@
 	h4,
 	h5,
 	h6 {
-		@apply text-heading font-bold;
+		@apply font-bold text-heading;
 	}
 
 	h1 {

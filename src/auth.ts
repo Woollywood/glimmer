@@ -4,9 +4,9 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import { User as PrismaUser } from '@prisma/client';
 
-import { signInDto } from '@/app/api/auth/sign-in/dto';
-import { getUserByEmail, getUserById } from '@/app/api/user/service';
+import { signInDto } from './actions/auth/sign-in/dto';
 import Credentials from 'next-auth/providers/credentials';
+import { getUserByEmail, getUserById } from '@/data/user';
 
 declare module 'next-auth' {
 	interface Session extends DefaultSession {
@@ -47,14 +47,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 		async session({ token, session }) {
 			session.user = token.user as PrismaUser;
 			return session;
-		},
-	},
-	events: {
-		async linkAccount({ user }) {
-			await prisma.user.update({
-				where: { id: user.id },
-				data: { isTwoFactorEnabled: false },
-			});
 		},
 	},
 });

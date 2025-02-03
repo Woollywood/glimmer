@@ -24,7 +24,7 @@ const Landing: NextPage<Props> = async ({ searchParams }) => {
 					<div className='flex flex-col justify-center'>
 						<div className='flex items-center gap-0.5'>
 							{Array.from({ length: 5 }).map((_, index) => (
-								<Star key={index} className='fill-warning stroke-warning size-4' />
+								<Star key={index} className='size-4 fill-warning stroke-warning' />
 							))}
 						</div>
 						<i>&quot;I can&apos;t believe it&apos;s free!&quot;</i>

@@ -9,7 +9,10 @@ import { env } from '@/configs/env';
 export const signInWithCredentials = async (dto: SignInDto, callbackUrl?: string) => {
 	try {
 		await signIn(dto);
-		await _signIn('credentials', { ...dto, redirectTo: callbackUrl || env.AUTH_DEFAULT_REDIRECT_URL });
+		await _signIn('credentials', {
+			...dto,
+			redirectTo: callbackUrl || env.AUTH_DEFAULT_REDIRECT_URL,
+		});
 	} catch (error) {
 		throw error;
 	}

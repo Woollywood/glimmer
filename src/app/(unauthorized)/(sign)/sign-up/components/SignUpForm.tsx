@@ -6,22 +6,25 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useSignUpForm } from '@/hooks/useSignUpForm';
-import { signInWithOAuth } from '@/app/api/auth/sign-in/actions';
-import { SignUpDto } from '@/app/api/auth/sign-up/dto';
+import { signInWithOAuth } from '@/actions/auth/sign-in/actions';
+import { SignUpDto } from '@/actions/auth/sign-up/dto';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { signUpWithCredentials } from '@/app/api/auth/sign-up/actions';
+import { signUpWithCredentials } from '@/actions/auth/sign-up/actions';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useAuthErrorHandler } from '../../hooks/useAuthErrorHandler';
+import { FormAlert } from '@/components/ui/FormAlert';
 
 interface Props {
 	callbackUrl?: string;
 }
 export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 	const { handleError } = useErrorHandler();
-	const hasOtherProviders = Object.keys(providerMap).length > 0;
-	const form = useSignUpForm();
+	const { error } = useAuthErrorHandler();
 
 	const [isPending, startTransition] = useTransition();
+
+	const form = useSignUpForm();
 	const submitHandler = async (values: SignUpDto) => {
 		startTransition(async () => {
 			try {
@@ -32,8 +35,10 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 		});
 	};
 
+	const hasOtherProviders = Object.keys(providerMap).length > 0;
+
 	return (
-		<Card>
+		<Card className='w-[32rem]'>
 			<CardHeader>
 				<CardTitle className='text-center'>
 					<h1>Sign up</h1>
@@ -55,7 +60,7 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(submitHandler)} className='min-w-[22.5rem] space-y-4'>
+					<form onSubmit={form.handleSubmit(submitHandler)} className='space-y-4'>
 						<div className='space-y-4'>
 							<FormField
 								control={form.control}
@@ -115,6 +120,11 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 								)}
 							/>
 						</div>
+						{error && (
+							<div className='py-4'>
+								<FormAlert>{error}</FormAlert>
+							</div>
+						)}
 						<div className='flex items-center justify-center'>
 							<Button disabled={isPending} className='w-full' size='lg'>
 								Sign me up

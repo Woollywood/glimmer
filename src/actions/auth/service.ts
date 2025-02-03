@@ -7,9 +7,10 @@ import { NextResponse } from 'next/server';
 import { SignInDto } from './sign-in/dto';
 import { SignUpDto } from './sign-up/dto';
 import bcrypt from 'bcrypt';
-import { getUserByEmail } from '../user/service';
-import { generatePasswordResetToken, getPasswordResetTokenByToken } from './forgot-password/actions';
+import { getUserByEmail } from '@/data/user';
+import { generatePasswordResetToken } from './forgot-password/actions';
 import { sendPasswordResetTokenEmail } from '../mail/actions';
+import { getPasswordResetTokenByToken } from '@/data/passwordResetToken';
 
 export const signUp = async ({ name, email, password }: SignUpDto) => {
 	const existingUser = await getUserByEmail(email);

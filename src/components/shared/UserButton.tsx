@@ -9,7 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { HelpCircle, HelpCircleIcon, LogOut, Moon, Settings, Sun, SunMoon } from 'lucide-react';
+import { HelpCircle, HelpCircleIcon, LogOut, Moon, Settings, Sun, SunMedium } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { signOut } from 'next-auth/react';
 import { User } from '@prisma/client';
@@ -71,7 +71,7 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 				<DropdownMenuSeparator />
 				<div className='flex items-center gap-4 p-2'>
 					<span>Mode:</span>
-					<div className='flex w-full items-center justify-between gap-2'>
+					<div className='flex w-full items-center justify-between gap-4'>
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<Button
@@ -105,7 +105,7 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 									variant={theme === 'system' ? 'default' : 'ghost'}
 									size='icon'
 									onClick={() => setTheme('system')}>
-									<SunMoon />
+									<SunMedium />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent>

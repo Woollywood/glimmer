@@ -6,13 +6,16 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useSignInForm } from '@/hooks/useSignInForm';
-import { SignInDto } from '@/app/api/auth/sign-in/dto';
-import { signInWithCredentials, signInWithOAuth } from '@/app/api/auth/sign-in/actions';
+import { SignInDto } from '@/actions/auth/sign-in/dto';
+import { signInWithCredentials, signInWithOAuth } from '@/actions/auth/sign-in/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { ForgotPasswordSchema, useForgotPasswordForm } from '@/hooks/useForgotPasswordForm';
-import { forgotPassword } from '@/app/api/auth/forgot-password/actions';
+import { forgotPassword } from '@/actions/auth/forgot-password/actions';
+import { useToast } from '@/hooks/useToast';
+import { useAuthErrorHandler } from '../../hooks/useAuthErrorHandler';
+import { FormAlert } from '@/components/ui/FormAlert';
 
 enum Stage {
 	SIGN_IN = 1,
@@ -23,13 +26,14 @@ interface Props {
 	callbackUrl?: string;
 }
 export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
-	const [stage, setStage] = useState<Stage>(Stage.SIGN_IN);
-
 	const { handleError } = useErrorHandler();
-	const hasOtherProviders = Object.keys(providerMap).length > 0;
-	const form = useSignInForm();
+	const { error } = useAuthErrorHandler();
 
+	const { toast } = useToast();
+	const [stage, setStage] = useState<Stage>(Stage.SIGN_IN);
 	const [isPending, startTransition] = useTransition();
+
+	const form = useSignInForm();
 	const submitHandler = async (values: SignInDto) => {
 		startTransition(async () => {
 			try {
@@ -45,14 +49,25 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 		startTransition(async () => {
 			try {
 				await forgotPassword(email.toLocaleLowerCase());
+				toast({ title: 'Notifications', description: 'Password reset link sent to your email' });
 			} catch (error) {
 				handleError(error);
 			}
 		});
 	};
 
+	const handleOAuth = async (provider: (typeof providerMap)[number], callbackUrl?: string) => {
+		try {
+			await signInWithOAuth(provider, callbackUrl);
+		} catch (error) {
+			handleError(error);
+		}
+	};
+
+	const hasOtherProviders = Object.keys(providerMap).length > 0;
+
 	return (
-		<Card>
+		<Card className='w-[32rem]'>
 			<CardHeader>
 				<CardTitle className='text-center'>
 					<h1>Sign in</h1>
@@ -75,7 +90,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 			<CardContent>
 				{stage === Stage.SIGN_IN && (
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(submitHandler)} className='min-w-[22.5rem] space-y-4'>
+						<form onSubmit={form.handleSubmit(submitHandler)} className='space-y-4'>
 							<FormField
 								control={form.control}
 								name='email'
@@ -105,9 +120,14 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 									</FormItem>
 								)}
 							/>
+							{error && (
+								<div className='py-4'>
+									<FormAlert>{error}</FormAlert>
+								</div>
+							)}
 							<button
 								type='button'
-								className='text-link hover:text-link-hover font-bold transition-colors'
+								className='font-bold text-link transition-colors hover:text-link-hover'
 								onClick={() => setStage(Stage.FORGOT_PASS)}>
 								Forgot password?
 							</button>
@@ -136,7 +156,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 							/>
 							<button
 								type='button'
-								className='text-link hover:text-link-hover font-bold transition-colors'
+								className='font-bold text-link transition-colors hover:text-link-hover'
 								onClick={() => setStage(Stage.SIGN_IN)}>
 								Back to form
 							</button>
@@ -157,7 +177,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 							<form
 								key={provider.id}
 								className='flex w-full items-center gap-x-4'
-								action={() => signInWithOAuth(provider, callbackUrl)}>
+								action={() => handleOAuth(provider, callbackUrl)}>
 								<Button className='w-full'>
 									<span>Sign in with {provider.name}</span>
 								</Button>

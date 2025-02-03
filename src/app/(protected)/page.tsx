@@ -1,11 +1,8 @@
 import { NextPage } from 'next';
+import { permanentRedirect } from 'next/navigation';
 
 const Page: NextPage = async () => {
-	return (
-		<main>
-			<h1 className='text-center'>Main page</h1>
-		</main>
-	);
+	permanentRedirect('/home');
 };
 
 export default Page;
