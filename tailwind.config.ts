@@ -115,6 +115,10 @@ export default {
 					},
 				},
 			},
+			spacing: {
+				'header-height': 'var(--header-height)',
+				'sidebar-width': 'var(--sidebar-width)',
+			},
 			borderRadius: {
 				DEFAULT: 'var(--ui-border-radius)',
 				sm: 'var(--ui-border-radius-sm)',

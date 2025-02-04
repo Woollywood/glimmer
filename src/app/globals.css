@@ -4,6 +4,9 @@
 
 @layer base {
 	:root {
+		--header-height: 4rem;
+		--sidebar-width: 17.125rem;
+
 		--ui-blue: 0 123 255;
 		--ui-indigo: 102 16 242;
 		--ui-purple: 111 66 193;
@@ -169,22 +172,5 @@
 	}
 	body {
 		@apply bg-body-bg font-primary text-body-color;
-	}
-
-	a {
-		@apply transition-colors hover:text-link-hover;
-	}
-
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		@apply font-bold text-heading;
-	}
-
-	h1 {
-		@apply text-4xl;
 	}
 }

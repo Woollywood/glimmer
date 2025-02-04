@@ -7,7 +7,7 @@ interface Props {
 
 const Layout: NextPage<Props> = ({ children }) => {
 	return (
-		<div className='grid grid-cols-2 gap-6'>
+		<div className='container grid grid-cols-[var(--sidebar-width)_1fr] gap-6'>
 			<Sidebar />
 			{children}
 		</div>

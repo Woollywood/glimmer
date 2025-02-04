@@ -28,23 +28,25 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Avatar className='cursor-pointer'>
-					<AvatarImage src={user?.image || ''} />
+				<Avatar className='cursor-pointer' rounded={false}>
+					<AvatarImage src={user?.image} />
 					<AvatarFallback>A</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<div className='mb-2 flex items-center gap-2'>
-					<Avatar>
-						<AvatarImage src={user?.image || ''} />
+					<Avatar className='cursor-pointer'>
+						<AvatarImage src={user?.image} />
 						<AvatarFallback>A</AvatarFallback>
 					</Avatar>
 					<div>
-						<h3>{user?.name?.split(' ')[0]}</h3>
+						<Link href='/home' className='h1'>
+							{user?.name?.split(' ')[0]}
+						</Link>
 					</div>
 				</div>
 				<div className='my-4'>
-					<Button className='w-full'>
+					<Button className='w-full' asChild>
 						<Link href='/'>View profile</Link>
 					</Button>
 				</div>

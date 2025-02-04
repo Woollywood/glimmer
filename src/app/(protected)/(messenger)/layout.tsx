@@ -1,4 +1,3 @@
-import { Header } from '@/components/shared/Header';
 import { NextPage } from 'next';
 
 interface Props {
@@ -6,12 +5,7 @@ interface Props {
 }
 
 const Layout: NextPage<Props> = ({ children }) => {
-	return (
-		<div>
-			<Header />
-			<div className='pt-header-height mt-6'>{children}</div>
-		</div>
-	);
+	return <div className='container grid grid-cols-[var(--sidebar-width)_1fr] gap-6'>{children}</div>;
 };
 
 export default Layout;

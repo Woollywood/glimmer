@@ -9,7 +9,7 @@ export const Header: React.FC<React.HTMLAttributes<HTMLHeadElement>> = async ({ 
 	const session = await auth();
 
 	return (
-		<header className={cn(className, 'bg-dark h-16')} {...props}>
+		<header className={cn(className, 'h-header-height fixed top-0 w-full bg-dark')} {...props}>
 			<div className='container flex h-full items-center justify-between gap-8'>
 				<div className='flex items-center gap-4'>
 					<Link href='/' className='py-3 text-2xl font-bold'>
