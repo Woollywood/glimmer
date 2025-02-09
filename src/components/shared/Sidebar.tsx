@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Card, CardContent, CardFooter } from '../ui/card';
-import Link from 'next/link';
-import { currentUser } from '@/data/session';
+import { getUser } from '@/session/data';
 
 export const Sidebar: NextPage = async ({}) => {
-	const user = await currentUser();
+	const user = await getUser();
 
 	return (
 		<aside className='sticky top-[calc(var(--header-height)+1.5rem)]'>

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { SessionProvider } from 'next-auth/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import './globals.css';
@@ -24,17 +23,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<SessionProvider>
-			<html lang='en' suppressHydrationWarning>
-				<body className={cn(inter.variable, 'antialiased')}>
-					<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-						<TooltipProvider>
-							<div className='grid h-full min-h-screen'>{children}</div>
-							<Toaster />
-						</TooltipProvider>
-					</ThemeProvider>
-				</body>
-			</html>
-		</SessionProvider>
+		<html lang='en' suppressHydrationWarning>
+			<body className={cn(inter.variable, 'antialiased')}>
+				<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+					<TooltipProvider>
+						<div className='grid h-full min-h-screen'>{children}</div>
+						<Toaster />
+					</TooltipProvider>
+				</ThemeProvider>
+			</body>
+		</html>
 	);
 }

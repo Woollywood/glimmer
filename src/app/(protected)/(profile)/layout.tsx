@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { getProfileByUserId } from '@/data/profile';
-import { currentUser } from '@/data/session';
+import { getProfileByUserId } from '@/profile/data';
+import { getUser } from '@/session/data';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { ProfileField } from './profile/about/_components/ProfileField';
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const Layout: NextPage<Props> = async ({ children }) => {
-	const user = await currentUser();
+	const user = await getUser();
 	const profile = await getProfileByUserId(user?.id || '');
 	const profileInfo = [profile?.rank, profile?.livesIn].filter(Boolean);
 	const hasProfileInfo = profileInfo.length > 0;

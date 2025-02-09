@@ -19,10 +19,10 @@ export const signUpSchema = z
 		}
 	});
 
-type SignUpSchema = z.infer<typeof signUpSchema>;
+export type SignUpSchema = z.infer<typeof signUpSchema>;
 export type SignUpFormReturn = UseFormReturn<SignUpSchema>;
 
-export const useSignUpForm = () => {
+export const useFormSignUp = () => {
 	return useForm<SignUpSchema>({
 		defaultValues: {
 			name: '',

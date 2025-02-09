@@ -4,11 +4,11 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 interface Props {
-	searchParams: Promise<{ callbackUrl?: string }>;
+	searchParams: Promise<{ callbackURL?: string }>;
 }
 
 const Landing: NextPage<Props> = async ({ searchParams }) => {
-	const { callbackUrl } = await searchParams;
+	const { callbackURL } = await searchParams;
 
 	return (
 		<>
@@ -19,7 +19,7 @@ const Landing: NextPage<Props> = async ({ searchParams }) => {
 				</p>
 				<div className='flex items-center justify-center gap-4'>
 					<Button asChild>
-						<Link href={{ pathname: '/sign-up', query: { callbackUrl } }}>Sign up free</Link>
+						<Link href={{ pathname: '/sign-up', query: { callbackURL } }}>Sign up free</Link>
 					</Button>
 					<div className='flex flex-col justify-center'>
 						<div className='flex items-center gap-0.5'>

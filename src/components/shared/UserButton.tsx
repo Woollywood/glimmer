@@ -1,6 +1,11 @@
 'use client';
 
 import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { User } from 'better-auth';
+import { useTheme } from 'next-themes';
+import { HelpCircle, HelpCircleIcon, LogOut, Moon, Settings, Sun, SunMedium } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -9,14 +14,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { HelpCircle, HelpCircleIcon, LogOut, Moon, Settings, Sun, SunMedium } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { signOut } from 'next-auth/react';
-import { User } from '@prisma/client';
 import { Button } from '../ui/button';
-import Link from 'next/link';
-import { useTheme } from 'next-themes';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { authClient } from '@/lib/authClient';
 
 interface Props {
 	user: User | undefined;
@@ -24,6 +25,8 @@ interface Props {
 
 export const UserButton: React.FC<Props> = ({ user }) => {
 	const { setTheme, theme } = useTheme();
+	const router = useRouter();
+	const pathname = usePathname();
 
 	return (
 		<DropdownMenu>
@@ -66,7 +69,18 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem onClick={() => signOut()}>
+				<DropdownMenuItem
+					onClick={() =>
+						authClient.signOut({
+							fetchOptions: {
+								onSuccess: () => {
+									const redirectURL = new URL(pathname, window.location.origin);
+									redirectURL.searchParams.set('callbackURL', pathname);
+									router.push(redirectURL.href);
+								},
+							},
+						})
+					}>
 					<LogOut />
 					<span>Sign out</span>
 				</DropdownMenuItem>

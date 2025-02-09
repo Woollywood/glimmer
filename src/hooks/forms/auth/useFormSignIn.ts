@@ -7,10 +7,10 @@ export const signInSchema = z.object({
 	password: z.string(),
 });
 
-type SignInSchema = z.infer<typeof signInSchema>;
+export type SignInSchema = z.infer<typeof signInSchema>;
 export type SignInFormReturn = UseFormReturn<SignInSchema>;
 
-export const useSignInForm = () => {
+export const useFormSignIn = () => {
 	return useForm<SignInSchema>({
 		defaultValues: {
 			email: '',

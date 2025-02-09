@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { getProfileByUserId } from '@/data/profile';
-import { currentUser } from '@/data/session';
+import { getProfileByUserId } from '@/profile/data';
+import { getUser } from '@/session/data';
 import { NextPage } from 'next';
 import { PageForm } from './_components/form/Form';
 
 const Page: NextPage = async () => {
-	const user = await currentUser();
+	const user = await getUser();
 	const profile = await getProfileByUserId(user?.id || '');
 
 	if (!profile) {

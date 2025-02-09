@@ -17,10 +17,10 @@ export const resetPasswordSchema = z
 		}
 	});
 
-type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
 export type ResetPasswordFormReturn = UseFormReturn<ResetPasswordSchema>;
 
-export const useResetPasswordForm = () => {
+export const useFormResetPassword = () => {
 	return useForm<ResetPasswordSchema>({
 		defaultValues: {
 			password: '',

@@ -7,13 +7,13 @@ import { Field } from './Field';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { UpdateDto } from '@/actions/profile/dto';
-import { update } from '@/actions/profile/actions';
+import { UpdateDto } from '@/profile/dto';
+import { update } from '@/profile/actions';
 import { Input } from '@/components/ui/input';
 import { Profile, Status } from '@prisma/client';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { InputDate } from '@/components/ui/inputDate';
-import { useProfileAboutForm } from '@/hooks/forms/useProfileAboutForm';
+import { useFormProfileAbout } from '@/hooks/forms/profile/useFormProfileAbout';
 import { store } from './store';
 
 interface Props extends Omit<Profile, 'userId'> {
@@ -23,7 +23,7 @@ interface Props extends Omit<Profile, 'userId'> {
 const statuses: Status[] = ['SINGLE', 'MARRIED'];
 
 export const PageForm: React.FC<Props> = observer(({ id, ...defaultValues }) => {
-	const form = useProfileAboutForm(defaultValues);
+	const form = useFormProfileAbout(defaultValues);
 	const {
 		watch,
 		setValue,

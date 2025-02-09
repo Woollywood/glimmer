@@ -1,12 +1,12 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { UserButton } from './UserButton';
-import { currentUser } from '@/data/session';
+import { getUser } from '@/session/data';
 
 export const Header: React.FC<React.HTMLAttributes<HTMLHeadElement>> = async ({ className, ...props }) => {
-	const user = await currentUser();
+	const user = await getUser();
 
 	return (
 		<header className={cn(className, 'fixed top-0 h-header-height w-full bg-dark')} {...props}>
