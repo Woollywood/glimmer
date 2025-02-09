@@ -22,8 +22,28 @@ model User {
     password      String?
     accounts      Account[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    profile   Profile[]
+}
+
+enum Status {
+    SINGLE
+    MARRIED
+}
+
+model Profile {
+    id     String @id @default(cuid())
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @unique
+
+    born      DateTime?
+    status    Status?
+    rank      String?
+    livesIn   String?
+    workplace String?
+    education String?
+    overview  String?
 }
 
 model Account {

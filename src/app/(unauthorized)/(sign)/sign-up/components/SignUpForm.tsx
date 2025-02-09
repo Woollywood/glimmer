@@ -5,7 +5,7 @@ import { providerMap } from '@/auth.config';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useSignUpForm } from '@/hooks/useSignUpForm';
+import { useSignUpForm } from '@/hooks/forms/useSignUpForm';
 import { signInWithOAuth } from '@/actions/auth/sign-in/actions';
 import { SignUpDto } from '@/actions/auth/sign-up/dto';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +38,7 @@ export const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
 	const hasOtherProviders = Object.keys(providerMap).length > 0;
 
 	return (
-		<Card className='w-[32rem]'>
+		<Card className='w-[32rem] p-12'>
 			<CardHeader>
 				<CardTitle className='text-center'>
 					<h1>Sign up</h1>

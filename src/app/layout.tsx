@@ -10,6 +10,7 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const inter = Inter({
 	variable: '--font-primary',
+	subsets: ['latin'],
 });
 
 export const metadata: Metadata = {

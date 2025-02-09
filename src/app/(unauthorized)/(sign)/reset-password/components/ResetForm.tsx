@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { useResetPasswordForm } from '@/hooks/useResetPasswordForm';
+import { useResetPasswordForm } from '@/hooks/forms/useResetPasswordForm';
 import Link from 'next/link';
 import React, { useTransition } from 'react';
 import { useToast } from '@/hooks/useToast';

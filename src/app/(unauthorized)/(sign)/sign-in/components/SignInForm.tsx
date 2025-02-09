@@ -5,13 +5,13 @@ import { providerMap } from '@/auth.config';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useSignInForm } from '@/hooks/useSignInForm';
+import { useSignInForm } from '@/hooks/forms/useSignInForm';
 import { SignInDto } from '@/actions/auth/sign-in/dto';
 import { signInWithCredentials, signInWithOAuth } from '@/actions/auth/sign-in/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { ForgotPasswordSchema, useForgotPasswordForm } from '@/hooks/useForgotPasswordForm';
+import { ForgotPasswordSchema, useForgotPasswordForm } from '@/hooks/forms/useForgotPasswordForm';
 import { forgotPassword } from '@/actions/auth/forgot-password/actions';
 import { useToast } from '@/hooks/useToast';
 import { useAuthErrorHandler } from '../../hooks/useAuthErrorHandler';
@@ -67,7 +67,7 @@ export const SignInForm: React.FC<Props> = ({ callbackUrl }) => {
 	const hasOtherProviders = Object.keys(providerMap).length > 0;
 
 	return (
-		<Card className='w-[32rem]'>
+		<Card className='w-[32rem] p-12'>
 			<CardHeader>
 				<CardTitle className='text-center'>
 					<h1>Sign in</h1>

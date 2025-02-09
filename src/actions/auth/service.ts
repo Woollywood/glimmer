@@ -19,12 +19,17 @@ export const signUp = async ({ name, email, password }: SignUpDto) => {
 	}
 
 	const hashedPassword = await getHashedPassword(password);
-	await prisma.user.create({
-		data: {
-			name,
-			email,
-			password: hashedPassword,
-		},
+	await prisma.$transaction(async (tx) => {
+		await tx.user.create({
+			data: {
+				name,
+				email,
+				password: hashedPassword,
+				profile: {
+					create: {},
+				},
+			},
+		});
 	});
 
 	return NextResponse.json(null, { status: 201 });

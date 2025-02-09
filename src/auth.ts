@@ -49,4 +49,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			return session;
 		},
 	},
+	events: {
+		async linkAccount({ user }) {
+			await prisma.profile.create({ data: { userId: user.id! } });
+		},
+	},
 });

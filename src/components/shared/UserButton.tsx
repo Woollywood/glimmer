@@ -28,7 +28,7 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Avatar className='cursor-pointer' rounded={false}>
+				<Avatar className='cursor-pointer'>
 					<AvatarImage src={user?.image} />
 					<AvatarFallback>A</AvatarFallback>
 				</Avatar>
@@ -47,7 +47,7 @@ export const UserButton: React.FC<Props> = ({ user }) => {
 				</div>
 				<div className='my-4'>
 					<Button className='w-full' asChild>
-						<Link href='/'>View profile</Link>
+						<Link href='/profile'>View profile</Link>
 					</Button>
 				</div>
 
