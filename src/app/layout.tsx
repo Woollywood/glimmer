@@ -1,16 +1,14 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import './globals.css';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
-const geistSans = Geist({
+const inter = Inter({
 	variable: '--font-primary',
-	subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-	variable: '--font-secondary',
 	subsets: ['latin'],
 });
 
@@ -25,8 +23,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body className={cn(geistSans.variable, geistMono.variable, 'antialiased')}>{children}</body>
+		<html lang='en' suppressHydrationWarning>
+			<body className={cn(inter.variable, 'antialiased')}>
+				<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+					<TooltipProvider>
+						<div className='grid h-full min-h-screen'>{children}</div>
+						<Toaster />
+					</TooltipProvider>
+				</ThemeProvider>
+			</body>
 		</html>
 	);
 }
