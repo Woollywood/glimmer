@@ -1,12 +1,10 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { getProfileByUserId } from '@/profile/data';
-import { getUser } from '@/session/data';
+import { getProfile } from '@/profile/data';
 import { NextPage } from 'next';
 import { PageForm } from './_components/form/Form';
 
 const Page: NextPage = async () => {
-	const user = await getUser();
-	const profile = await getProfileByUserId(user?.id || '');
+	const profile = await getProfile();
 
 	if (!profile) {
 		throw new Error('Profile not found');
