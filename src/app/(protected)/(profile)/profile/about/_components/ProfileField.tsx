@@ -1,14 +1,19 @@
 import React from 'react';
 
-interface Props extends React.PropsWithChildren {
+export interface Field {
 	icon: React.ReactNode;
+	label: string | undefined | null;
 }
 
-export const ProfileField: React.FC<Props> = ({ icon, children }) => {
+export const ProfileField: React.FC<Field> = ({ icon, label }) => {
+	if (!label) {
+		return null;
+	}
+
 	return (
 		<div className='flex items-center gap-1'>
 			{icon}
-			<span>{children}</span>
+			<span>{label}</span>
 		</div>
 	);
 };

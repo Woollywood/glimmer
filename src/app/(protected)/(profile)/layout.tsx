@@ -4,9 +4,10 @@ import { getProfileByUserId } from '@/profile/data';
 import { getUser } from '@/session/data';
 import { NextPage } from 'next';
 import Link from 'next/link';
-import { ProfileField } from './profile/about/_components/ProfileField';
+import { Field } from './profile/about/_components/ProfileField';
 import { User } from 'lucide-react';
 import { AboutCard } from './profile/about/_components/AboutCard';
+import { ProfileFields } from './profile/about/_components/ProfileFields';
 
 interface ILink {
 	label: string;
@@ -30,8 +31,10 @@ interface Props {
 const Layout: NextPage<Props> = async ({ children }) => {
 	const user = await getUser();
 	const profile = await getProfileByUserId(user?.id || '');
-	const profileInfo = [profile?.rank, profile?.livesIn].filter(Boolean);
-	const hasProfileInfo = profileInfo.length > 0;
+	const profileFields: Field[] = [
+		{ icon: <User />, label: profile?.rank },
+		{ icon: <User />, label: profile?.livesIn },
+	];
 
 	return (
 		<div className='container grid grid-cols-[3fr_1fr] gap-6'>
@@ -45,15 +48,7 @@ const Layout: NextPage<Props> = async ({ children }) => {
 							</Avatar>
 							<h2>{user?.name}</h2>
 						</div>
-						{hasProfileInfo && (
-							<ul className='flex items-center gap-2'>
-								{profileInfo.map((info, index) => (
-									<li key={index}>
-										<ProfileField icon={<User />}>{info}</ProfileField>
-									</li>
-								))}
-							</ul>
-						)}
+						<ProfileFields fields={profileFields} />
 					</CardContent>
 					<CardFooter>
 						<nav>

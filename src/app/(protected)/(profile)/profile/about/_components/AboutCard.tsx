@@ -1,15 +1,25 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Profile } from '@prisma/client';
-import { ProfileField } from './ProfileField';
+import { Field } from './ProfileField';
 import { User } from 'lucide-react';
 import moment from 'moment';
+import { ProfileFields } from './ProfileFields';
 
-type Props = Omit<Profile, 'id' | 'userId' | 'education' | 'livesIn' | 'rank' | 'workplace'>;
+type Props = Pick<Profile, 'overview' | 'born' | 'status'>;
 
 export const AboutCard: React.FC<Props> = ({ overview, born, status }) => {
-	const profileInfo = [born, status].filter(Boolean);
-	const hasProfileInfo = profileInfo.length > 0;
+	const existingFields = [overview, born, status].filter(Boolean);
+
+	if (existingFields.length === 0) {
+		return null;
+	}
+
+	const profileFields: Field[] = [
+		{ icon: <User />, label: overview },
+		{ icon: <User />, label: born && moment(born).format('LL') },
+		{ icon: <User />, label: status },
+	];
 
 	return (
 		<Card>
@@ -21,17 +31,9 @@ export const AboutCard: React.FC<Props> = ({ overview, born, status }) => {
 					<p>{overview}</p>
 				</CardDescription>
 			</CardHeader>
-			{hasProfileInfo && (
+			{existingFields && (
 				<CardContent>
-					<ul>
-						{profileInfo.map((info, index) => (
-							<li key={index}>
-								<ProfileField icon={<User />}>
-									{typeof info === 'object' ? moment(info).format('LL') : info}
-								</ProfileField>
-							</li>
-						))}
-					</ul>
+					<ProfileFields fields={profileFields} direction='vertical' />
 				</CardContent>
 			)}
 		</Card>
