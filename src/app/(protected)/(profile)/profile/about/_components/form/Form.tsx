@@ -15,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { InputDate } from '@/components/ui/inputDate';
 import { useFormProfileAbout } from '@/hooks/forms/profile/useFormProfileAbout';
 import { store } from './store';
+import { useTransition } from 'react';
+import { getProfile } from '@/profile/data';
 
 interface Props extends Omit<Profile, 'userId'> {
 	id: string;
@@ -24,19 +26,18 @@ const statuses: Status[] = ['SINGLE', 'MARRIED'];
 
 export const PageForm: React.FC<Props> = observer(({ id, ...defaultValues }) => {
 	const form = useFormProfileAbout(defaultValues);
-	const {
-		watch,
-		setValue,
-		getValues,
-		formState: { isSubmitting },
-	} = form;
+	const { watch, setValue, getValues } = form;
 	const { born, education, livesIn, overview, rank, status, workplace } = getValues();
 	watch(Object.keys(defaultValues) as unknown as keyof UpdateDto);
 	const hasChanges = !isEqual(defaultValues, getValues());
 
+	const [isPending, startTransition] = useTransition();
 	const onSubmit = async (values: UpdateDto) => {
-		await update(id, values);
-		store.resetFields();
+		startTransition(async () => {
+			await update(id, values);
+			await getProfile();
+			store.resetFields();
+		});
 	};
 
 	const handleDelete = (field: keyof UpdateDto) => {
@@ -159,7 +160,7 @@ export const PageForm: React.FC<Props> = observer(({ id, ...defaultValues }) => 
 				</div>
 				{hasChanges && (
 					<div className='flex justify-end pt-8'>
-						<Button disabled={isSubmitting}>Save</Button>
+						<Button disabled={isPending}>Save</Button>
 					</div>
 				)}
 			</form>
