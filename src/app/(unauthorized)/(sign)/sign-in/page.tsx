@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useTransition } from 'react';
+import React, { Suspense, useTransition } from 'react';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/useToast';
 import { authClient } from '@/lib/authClient';
 
-const Page: NextPage = () => {
+const ContentPage: React.FC = () => {
 	const { toast } = useToast();
 
 	const params = useSearchParams();
@@ -78,91 +78,99 @@ const Page: NextPage = () => {
 	};
 
 	return (
-		<div className='flex h-full items-center justify-center'>
-			<Card className='w-[32rem] p-12'>
-				<CardHeader>
-					<CardTitle className='text-center'>
-						<h1>Sign in</h1>
-					</CardTitle>
-					<CardDescription className='text-center'>
-						<p>
-							Don&apos;t have an account?{' '}
+		<Card className='w-[32rem] p-12'>
+			<CardHeader>
+				<CardTitle className='text-center'>
+					<h1>Sign in</h1>
+				</CardTitle>
+				<CardDescription className='text-center'>
+					<p>
+						Don&apos;t have an account?{' '}
+						<Link
+							href={
+								callbackURL
+									? { pathname: '/sign-up', query: { callbackURL } }
+									: { pathname: '/sign-up' }
+							}
+							className='text-link'>
+							Click here to sign up
+						</Link>
+					</p>
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(submitHandler)} className='space-y-4'>
+						<FormField
+							control={form.control}
+							name='email'
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Input autoComplete='email' placeholder='Enter email' {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name='password'
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Input
+											autoComplete='current-password'
+											type='password'
+											placeholder='Enter password'
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div>
 							<Link
 								href={
 									callbackURL
-										? { pathname: '/sign-up', query: { callbackURL } }
-										: { pathname: '/sign-up' }
+										? { pathname: '/forgot-password', query: { callbackURL } }
+										: { pathname: '/forgot-password' }
 								}
-								className='text-link'>
-								Click here to sign up
+								type='button'
+								className='font-bold text-link transition-colors hover:text-link-hover'>
+								Forgot password?
 							</Link>
-						</p>
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(submitHandler)} className='space-y-4'>
-							<FormField
-								control={form.control}
-								name='email'
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<Input autoComplete='email' placeholder='Enter email' {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name='password'
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<Input
-												autoComplete='current-password'
-												type='password'
-												placeholder='Enter password'
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<div>
-								<Link
-									href={
-										callbackURL
-											? { pathname: '/forgot-password', query: { callbackURL } }
-											: { pathname: '/forgot-password' }
-									}
-									type='button'
-									className='font-bold text-link transition-colors hover:text-link-hover'>
-									Forgot password?
-								</Link>
-							</div>
-							<div className='flex items-center justify-center'>
-								<Button disabled={isPending} className='w-full' size='lg'>
-									Sign in
-								</Button>
-							</div>
-						</form>
-					</Form>
-					<div className='py-4'>
-						<p className='text-center text-gray-400'>Or continue with</p>
-					</div>
-					<div className='flex items-center gap-x-4'>
-						<Button disabled={isPending} className='w-full' onClick={handleSignInWithGithub}>
-							<span>Github</span>
-						</Button>
-						<Button disabled={isPending} className='w-full' onClick={handleSignInWithGoogle}>
-							<span>Google</span>
-						</Button>
-					</div>
-				</CardContent>
-			</Card>
+						</div>
+						<div className='flex items-center justify-center'>
+							<Button disabled={isPending} className='w-full' size='lg'>
+								Sign in
+							</Button>
+						</div>
+					</form>
+				</Form>
+				<div className='py-4'>
+					<p className='text-center text-gray-400'>Or continue with</p>
+				</div>
+				<div className='flex items-center gap-x-4'>
+					<Button disabled={isPending} className='w-full' onClick={handleSignInWithGithub}>
+						<span>Github</span>
+					</Button>
+					<Button disabled={isPending} className='w-full' onClick={handleSignInWithGoogle}>
+						<span>Google</span>
+					</Button>
+				</div>
+			</CardContent>
+		</Card>
+	);
+};
+
+const Page: NextPage = () => {
+	return (
+		<div className='flex h-full items-center justify-center'>
+			<Suspense>
+				<ContentPage />
+			</Suspense>
 		</div>
 	);
 };
